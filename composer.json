@@ -1,0 +1,14 @@
+{
+    "name": "fairgo/social-media-posts",
+    "description": "Custom post type for social media posts with Elementor Dynamic Tags.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "SocialMediaPosts\\": "includes/"
+        }
+    }
+}

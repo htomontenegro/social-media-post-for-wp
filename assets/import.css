@@ -1,0 +1,98 @@
+.smp-importer textarea {
+    font-family: Menlo, Consolas, monospace;
+    font-size: 13px;
+}
+
+.smp-importer .smp-import-summary {
+    margin-left: 12px;
+    font-weight: 600;
+}
+
+.smp-importer .smp-import-results {
+    margin-top: 16px;
+}
+
+.smp-importer .smp-import-results th,
+.smp-importer .smp-import-results td {
+    vertical-align: top;
+}
+
+.smp-importer .smp-col-status {
+    width: 110px;
+}
+
+.smp-importer .smp-col-platform {
+    width: 110px;
+}
+
+.smp-importer .smp-col-actions {
+    width: 110px;
+}
+
+.smp-importer .smp-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.6;
+    background: #f0f0f1;
+    color: #50575e;
+}
+
+.smp-importer .smp-status-badge.is-queued { background: #f0f0f1; color: #50575e; }
+.smp-importer .smp-status-badge.is-processing { background: #fff4d6; color: #8a6d00; }
+.smp-importer .smp-status-badge.is-created { background: #d8f0d8; color: #00733b; }
+.smp-importer .smp-status-badge.is-partial { background: #fff4d6; color: #8a6d00; }
+.smp-importer .smp-status-badge.is-duplicate { background: #e0e6ff; color: #2a3eb1; }
+.smp-importer .smp-status-badge.is-failed { background: #ffd8d6; color: #b32d2e; }
+
+.smp-importer .smp-url-cell {
+    max-width: 360px;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+    font-size: 12px;
+    color: #50575e;
+}
+
+.smp-importer .smp-row-message {
+    font-style: italic;
+    color: #50575e;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.smp-importer .smp-manual-entry {
+    background: #f6f7f7;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.smp-importer .smp-manual-entry h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.smp-importer .smp-manual-entry p {
+    margin-bottom: 15px;
+}
+
+.smp-importer .smp-manual-entry input,
+.smp-importer .smp-manual-entry textarea {
+    font-family: inherit;
+}
+
+.smp-importer .smp-manual-buttons {
+    margin-bottom: 0;
+}
+
+.smp-importer .smp-manual-buttons button {
+    margin-right: 10px;
+}
+
+.smp-import-collections {
+    min-height: 80px;
+    padding: 4px;
+}
