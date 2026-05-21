@@ -168,11 +168,15 @@
 				var dist = Math.abs( ( r.left + r.width / 2 ) - mid );
 				var t    = gsap.utils.clamp( 0, 1, dist / maxDist );
 				var z    = Math.max( 1, Math.round( ( 1 - t ) * 100 ) );
+				// Ease the opacity curve so cards next to the centre stay more
+				// visible, while distant cards still fall to ~0.
+				var opacityT = Math.pow( t, 1.5 );
 
 				gsap.set( card, {
-					scale:   gsap.utils.interpolate( 1.08, 0.58, t ),
-					opacity: gsap.utils.interpolate( 1, 0.18, t ),
-					zIndex:  z,
+					scale:        gsap.utils.interpolate( 1.08, 0.58, t ),
+					'--smp-fade': gsap.utils.interpolate( 0, 0.2, t ),
+					opacity:      gsap.utils.interpolate( 1, 0.05, opacityT ),
+					zIndex:       z,
 				} );
 			} );
 		}

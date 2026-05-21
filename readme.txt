@@ -25,5 +25,9 @@ Registers a public custom post type "Social Media Posts" with custom fields for 
 
 == Changelog ==
 
+= 1.1.0 =
+* New "Social Links" admin page to manage social profile URLs (Facebook, Instagram, X, TikTok, LinkedIn, plus unlimited extras), each with a per-link new-tab/same-tab target.
+* New [smp_social_links] shortcode (alias [smp_social_icons]) rendering branded or minimalist icon sets with controls for size, padding, gap, colour, background, shape, alignment, and target.
+
 = 1.0.0 =
 * Initial release.

@@ -229,6 +229,133 @@ class Admin {
 				</div>
 			</div>
 
+			<!-- SMP Social Icons Shortcode -->
+			<div class="smp-shortcode-section">
+				<h3><?php esc_html_e( '3. Social Icons', 'social-media-posts' ); ?></h3>
+				<p>
+					<?php esc_html_e( 'Display your social profile links as icons. Set the URLs and default look on the', 'social-media-posts' ); ?>
+					<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=' . SMP_POST_TYPE . '&page=smp-social-links' ) ); ?>"><?php esc_html_e( 'Social Links', 'social-media-posts' ); ?></a>
+					<?php esc_html_e( 'page; every attribute below overrides those defaults per-shortcode.', 'social-media-posts' ); ?>
+				</p>
+
+				<div class="smp-shortcode-block">
+					<div class="smp-shortcode-code">
+						<code>[smp_social_links]</code>
+						<button class="smp-copy-btn" onclick="smpCopyToClipboard('[smp_social_links]')" aria-label="<?php esc_attr_e( 'Copy shortcode', 'social-media-posts' ); ?>">
+							<?php esc_html_e( 'Copy', 'social-media-posts' ); ?>
+						</button>
+					</div>
+				</div>
+
+				<h4><?php esc_html_e( 'Available Attributes:', 'social-media-posts' ); ?></h4>
+				<table class="widefat striped">
+					<thead>
+						<tr>
+							<th><?php esc_html_e( 'Attribute', 'social-media-posts' ); ?></th>
+							<th><?php esc_html_e( 'Default', 'social-media-posts' ); ?></th>
+							<th><?php esc_html_e( 'Description', 'social-media-posts' ); ?></th>
+							<th><?php esc_html_e( 'Example', 'social-media-posts' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>style</code></td>
+							<td><code>branded</code></td>
+							<td><?php esc_html_e( 'Icon set: branded or minimalist', 'social-media-posts' ); ?></td>
+							<td><code>style="minimalist"</code></td>
+						</tr>
+						<tr>
+							<td><code>shape</code></td>
+							<td><code>circle</code></td>
+							<td><?php esc_html_e( 'circle, rounded, square, or none', 'social-media-posts' ); ?></td>
+							<td><code>shape="rounded"</code></td>
+						</tr>
+						<tr>
+							<td><code>size</code></td>
+							<td><code>20</code></td>
+							<td><?php esc_html_e( 'Icon glyph size in px (8-128)', 'social-media-posts' ); ?></td>
+							<td><code>size="24"</code></td>
+						</tr>
+						<tr>
+							<td><code>padding</code></td>
+							<td><code>12</code></td>
+							<td><?php esc_html_e( 'Space inside the shape in px (0-80)', 'social-media-posts' ); ?></td>
+							<td><code>padding="8"</code></td>
+						</tr>
+						<tr>
+							<td><code>gap</code></td>
+							<td><code>12</code></td>
+							<td><?php esc_html_e( 'Space between icons in px (0-80)', 'social-media-posts' ); ?></td>
+							<td><code>gap="16"</code></td>
+						</tr>
+						<tr>
+							<td><code>color</code></td>
+							<td><code>''</code></td>
+							<td><?php esc_html_e( 'Hex glyph colour (minimalist line colour; overrides branded glyph)', 'social-media-posts' ); ?></td>
+							<td><code>color="#111111"</code></td>
+						</tr>
+						<tr>
+							<td><code>bg</code></td>
+							<td><code>''</code></td>
+							<td><?php esc_html_e( 'Hex background colour (branded uses brand colours if blank)', 'social-media-posts' ); ?></td>
+							<td><code>bg="#1a1a1a"</code></td>
+						</tr>
+						<tr>
+							<td><code>border</code></td>
+							<td><code>0</code></td>
+							<td><?php esc_html_e( 'Border width in px (0-20; 0 = no border)', 'social-media-posts' ); ?></td>
+							<td><code>border="2"</code></td>
+						</tr>
+						<tr>
+							<td><code>border_color</code></td>
+							<td><code>''</code></td>
+							<td><?php esc_html_e( 'Hex border colour', 'social-media-posts' ); ?></td>
+							<td><code>border_color="#dddddd"</code></td>
+						</tr>
+						<tr>
+							<td><code>align</code></td>
+							<td><code>left</code></td>
+							<td><?php esc_html_e( 'left, center, or right', 'social-media-posts' ); ?></td>
+							<td><code>align="center"</code></td>
+						</tr>
+						<tr>
+							<td><code>target</code></td>
+							<td><code>_blank</code></td>
+							<td><?php esc_html_e( 'Link target: _blank (new tab) or _self (same tab)', 'social-media-posts' ); ?></td>
+							<td><code>target="_self"</code></td>
+						</tr>
+						<tr>
+							<td><code>only</code></td>
+							<td><code>''</code> (all)</td>
+							<td><?php esc_html_e( 'Comma list to limit & order which icons show', 'social-media-posts' ); ?></td>
+							<td><code>only="instagram,linkedin"</code></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<h4><?php esc_html_e( 'Examples:', 'social-media-posts' ); ?></h4>
+				<div class="smp-examples">
+					<div class="smp-example-item">
+						<strong><?php esc_html_e( 'Minimalist icons, dark, centered, open in same tab:', 'social-media-posts' ); ?></strong>
+						<div class="smp-shortcode-block">
+							<code>[smp_social_links style="minimalist" color="#111111" align="center" target="_self"]</code>
+							<button class="smp-copy-btn" onclick="smpCopyToClipboard('[smp_social_links style=&quot;minimalist&quot; color=&quot;#111111&quot; align=&quot;center&quot; target=&quot;_self&quot;]')" aria-label="<?php esc_attr_e( 'Copy shortcode', 'social-media-posts' ); ?>">
+								<?php esc_html_e( 'Copy', 'social-media-posts' ); ?>
+							</button>
+						</div>
+					</div>
+					<div class="smp-example-item">
+						<strong><?php esc_html_e( 'Only Instagram & LinkedIn, larger branded circles:', 'social-media-posts' ); ?></strong>
+						<div class="smp-shortcode-block">
+							<code>[smp_social_links only="instagram,linkedin" size="28" padding="14"]</code>
+							<button class="smp-copy-btn" onclick="smpCopyToClipboard('[smp_social_links only=&quot;instagram,linkedin&quot; size=&quot;28&quot; padding=&quot;14&quot;]')" aria-label="<?php esc_attr_e( 'Copy shortcode', 'social-media-posts' ); ?>">
+								<?php esc_html_e( 'Copy', 'social-media-posts' ); ?>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<!-- Platforms Reference -->
 			<div class="smp-shortcode-section">
 				<h3><?php esc_html_e( 'Supported Platforms', 'social-media-posts' ); ?></h3>

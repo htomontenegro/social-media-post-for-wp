@@ -25,6 +25,8 @@ final class Plugin {
 		( new BulkActions() )->register();
 		( new Carousel() )->register();
 		( new Grid() )->register();
+		( new Wall() )->register();
+		( new SocialLinks() )->register();
 		( new Admin() )->register();
 
 		if ( did_action( 'elementor/loaded' ) ) {

@@ -162,13 +162,18 @@ class Importer {
 
 		$existing = $this->find_existing_post( $url );
 		if ( $existing ) {
+			if ( ! empty( $collections ) ) {
+				wp_set_post_terms( $existing, $collections, 'social_media_collection', true );
+			}
 			wp_send_json_success( [
 				'status'    => 'duplicate',
 				'post_id'   => $existing,
 				'edit_link' => get_edit_post_link( $existing, 'raw' ),
 				'title'     => get_the_title( $existing ),
 				'platform'  => (string) get_post_meta( $existing, '_smp_platform', true ),
-				'message'   => __( 'Already imported.', 'social-media-posts' ),
+				'message'   => empty( $collections )
+					? __( 'Already imported.', 'social-media-posts' )
+					: __( 'Already imported — added to selected collection(s).', 'social-media-posts' ),
 			] );
 		}
 

@@ -1,0 +1,112 @@
+/* [smp_social_links] — social icon row */
+.smp-social {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--smp-sl-gap, 12px);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.smp-social--align-center {
+	justify-content: center;
+}
+
+.smp-social--align-right {
+	justify-content: flex-end;
+}
+
+.smp-social__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: calc(var(--smp-sl-size, 20px) + var(--smp-sl-pad, 12px) * 2);
+	height: calc(var(--smp-sl-size, 20px) + var(--smp-sl-pad, 12px) * 2);
+	padding: var(--smp-sl-pad, 12px);
+	line-height: 0;
+	text-decoration: none;
+	box-shadow: none;
+	border: var(--smp-sl-border-w, 0) solid var(--smp-sl-border-c, transparent);
+	transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.smp-social__icon {
+	display: inline-flex;
+}
+
+.smp-social__icon svg {
+	display: block;
+	width: var(--smp-sl-size, 20px);
+	height: var(--smp-sl-size, 20px);
+}
+
+/* Shapes */
+.smp-social--circle .smp-social__link {
+	border-radius: 50%;
+}
+
+.smp-social--rounded .smp-social__link {
+	border-radius: 25%;
+}
+
+.smp-social--square .smp-social__link {
+	border-radius: 0;
+}
+
+.smp-social--none .smp-social__link {
+	width: auto;
+	height: auto;
+	padding: 0;
+	background: none !important;
+	border: 0;
+}
+
+/* Branded: brand-coloured shape with a white glyph */
+.smp-social--branded .smp-social__link {
+	background: var(--smp-sl-bg, var(--smp-sl-brand, #444));
+	color: var(--smp-sl-color, #fff);
+}
+
+/* Branded with no shape: coloured glyph, no background */
+.smp-social--branded.smp-social--none .smp-social__link {
+	color: var(--smp-sl-color, var(--smp-sl-brand, #444));
+}
+
+/* Instagram gets its gradient unless a custom background is set */
+.smp-social--branded:not(.smp-social--has-bg):not(.smp-social--none) .smp-social__link--instagram {
+	background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+}
+
+/* Minimalist: monochrome line glyph, transparent shape by default */
+.smp-social--minimalist .smp-social__link {
+	background: var(--smp-sl-bg, transparent);
+	color: var(--smp-sl-color, #1a1a1a);
+}
+
+/* Hover */
+.smp-social__link:hover,
+.smp-social__link:focus-visible {
+	transform: translateY(-2px);
+	opacity: 0.9;
+}
+
+.smp-social--none .smp-social__link:hover,
+.smp-social--none .smp-social__link:focus-visible {
+	transform: none;
+	opacity: 0.65;
+}
+
+/* Fallback screen-reader text if the theme doesn't define it */
+.smp-social .screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+	word-wrap: normal !important;
+}

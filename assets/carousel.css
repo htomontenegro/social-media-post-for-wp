@@ -77,6 +77,7 @@
 /* ── Card ──────────────────────────────────────────────────────────────── */
 
 .smp-carousel__card {
+	position: relative;
 	flex: 0 0 var( --smp-card-width );
 	width: var( --smp-card-width );
 	background: #fff;
@@ -85,13 +86,26 @@
 	border: 1px solid rgba( 0, 0, 0, 0.06 );
 	box-shadow: 0 8px 36px rgba( 0, 0, 0, 0.18 );
 	transform-origin: center center;
-	opacity: 0.42;
+	/* Side cards are dimmed with a scrim overlay (see ::after), not element
+	   opacity, so the page background never bleeds through. JS drives --smp-fade. */
+	--smp-fade: 0.4;
 	/* initial scale set by JS; CSS sets a base so there's no flash */
 	transform: scale( 0.86 );
 	transition: box-shadow 0.25s ease, border-color 0.25s ease;
 	text-decoration: none;
 	color: inherit;
 	display: block;
+}
+
+.smp-carousel__card::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: #fff;
+	opacity: var( --smp-fade, 0 );
+	pointer-events: none;
+	z-index: 5;
 }
 
 .smp-carousel__card:is( a ):hover {

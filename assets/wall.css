@@ -1,0 +1,80 @@
+.smp-wall {
+	--smp-wall-cols: 8;
+	--smp-wall-rows: 6;
+	--smp-wall-gap: 4px;
+	position: relative;
+	width: 100vw;
+	max-width: 100vw;
+	height: 100vh;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+	overflow: hidden;
+	background: var(--smp-wall-bg, #0b0b0b);
+}
+
+.smp-wall__grid {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	grid-template-columns: repeat(var(--smp-wall-cols), 1fr);
+	grid-auto-rows: calc((100vh - (var(--smp-wall-gap) * (var(--smp-wall-rows) - 1))) / var(--smp-wall-rows));
+	gap: var(--smp-wall-gap);
+	opacity: var(--smp-wall-opacity, 1);
+	pointer-events: none;
+}
+
+.smp-wall__tile {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: var(--smp-wall-tile-bg, transparent);
+}
+
+.smp-wall__img {
+	width: 100%;
+	/* !important beats Elementor's `.elementor img { height: auto }` (0,1,1) */
+	height: 100% !important;
+	object-fit: cover;
+	display: block;
+	will-change: opacity;
+	filter: blur(var(--smp-wall-blur, 0px));
+}
+
+.smp-wall__placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #3a3a3a;
+}
+
+.smp-wall__scrim {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: var(--smp-wall-scrim, rgba(0, 0, 0, 0.45));
+	pointer-events: none;
+}
+
+.smp-wall__overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: clamp(1rem, 5vw, 4rem);
+	color: #fff;
+	pointer-events: none;
+}
+
+.smp-wall__overlay > * {
+	pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.smp-wall__img {
+		will-change: auto;
+	}
+}

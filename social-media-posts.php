@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       Social Media Posts
- * Description:       Custom post type to curate social media posts (Instagram, Facebook, X, TikTok, YouTube, LinkedIn, Other) with Elementor Dynamic Tag integration.
- * Version:           1.0.0
+ * Description:       Custom post type to curate social media posts (Instagram, Facebook, X, TikTok, YouTube, LinkedIn, Other) with Elementor Dynamic Tag integration, plus a Social Links manager and [smp_social_links] icon shortcode.
+ * Version:           1.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Fairgo
@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SMP_VERSION', '1.0.0' );
+define( 'SMP_VERSION', '1.1.0' );
 define( 'SMP_FILE', __FILE__ );
 define( 'SMP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SMP_URL', plugin_dir_url( __FILE__ ) );
