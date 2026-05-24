@@ -7,7 +7,7 @@ Instagram blocks HTTP requests with aggressive browser user-agents (like Chrome 
 Use a non-aggressive, identifier-based user-agent string:
 
 ```php
-'user-agent' => 'Mozilla/5.0 (compatible; Fairgo-SocialMediaPosts/1.0; +https://wordpress.org/)',
+'user-agent' => 'Mozilla/5.0 (compatible; SocialMediaPosts/1.0; +https://wordpress.org/)',
 ```
 
 Keep HTTP headers minimal:

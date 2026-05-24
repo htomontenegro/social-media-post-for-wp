@@ -58,7 +58,7 @@ PostParser::parse(platform, og_title, og_description)
 
 #### User-Agent (CRITICAL)
 ```php
-'user-agent' => 'Mozilla/5.0 (compatible; Fairgo-SocialMediaPosts/1.0; +https://wordpress.org/)',
+'user-agent' => 'Mozilla/5.0 (compatible; SocialMediaPosts/1.0; +https://wordpress.org/)',
 ```
 
 #### HTTP Headers (MINIMAL - DO NOT ADD EXTRA)
@@ -160,7 +160,7 @@ Handled by `nitter_image_to_twitter_cdn()` in `UrlEnricher`.
 #### User-Agent
 Same as Instagram — honest identifier required:
 ```php
-'user-agent' => 'Mozilla/5.0 (compatible; Fairgo-SocialMediaPosts/1.0; +https://wordpress.org/)',
+'user-agent' => 'Mozilla/5.0 (compatible; SocialMediaPosts/1.0; +https://wordpress.org/)',
 ```
 
 #### HTTP Headers
@@ -197,7 +197,7 @@ Structured format similar to Instagram:
 #### User-Agent
 Honest identifier (same as Instagram/Facebook):
 ```php
-'user-agent' => 'Mozilla/5.0 (compatible; Fairgo-SocialMediaPosts/1.0; +https://wordpress.org/)',
+'user-agent' => 'Mozilla/5.0 (compatible; SocialMediaPosts/1.0; +https://wordpress.org/)',
 ```
 
 #### OG Tag Format
@@ -229,7 +229,7 @@ Honest identifier (same as Instagram/Facebook):
 #### User-Agent
 Honest identifier (same as Instagram/Facebook):
 ```php
-'user-agent' => 'Mozilla/5.0 (compatible; Fairgo-SocialMediaPosts/1.0; +https://wordpress.org/)',
+'user-agent' => 'Mozilla/5.0 (compatible; SocialMediaPosts/1.0; +https://wordpress.org/)',
 ```
 
 #### OG Tag Format
@@ -350,7 +350,7 @@ error_log( 'Parsed: ' . json_encode( $parsed ) );
 ### Instagram Imports Fail
 **Symptom:** 403 Forbidden or bot detection  
 **Check:**
-1. User-agent is exactly: `Mozilla/5.0 (compatible; Fairgo-SocialMediaPosts/1.0; +https://wordpress.org/)`
+1. User-agent is exactly: `Mozilla/5.0 (compatible; SocialMediaPosts/1.0; +https://wordpress.org/)`
 2. No extra headers (no `DNT`, `Connection`, `Upgrade-Insecure-Requests`)
 3. URL is valid and public
 4. Try URL directly in browser (private window) to confirm it's accessible

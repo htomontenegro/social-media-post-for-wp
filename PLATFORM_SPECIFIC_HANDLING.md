@@ -48,7 +48,7 @@ Handled by `nitter_image_to_twitter_cdn()` in `UrlEnricher`.
 ### Instagram (instagram.com, instagr.am)
 - **Handler:** Standard `wp_safe_remote_get()` with v1 user-agent
 - **Why it works:** Instagram serves OG tags publicly BUT has bot detection
-- **User-agent:** Honest identifier (`Fairgo-SocialMediaPosts/1.0`) - breaks bot detection
+- **User-agent:** Honest identifier (`SocialMediaPosts/1.0`) - breaks bot detection
 - **Headers:** Minimal (Accept, Accept-Language only)
 - **⚠️ Critical:** Don't add DNT, Connection, or Upgrade-Insecure-Requests headers
 
