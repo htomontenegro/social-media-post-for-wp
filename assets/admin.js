@@ -216,6 +216,41 @@
             });
         });
 
+        $box.on('click', '.smp-copy-to-library', function (e) {
+            e.preventDefault();
+            var mediaUrl = $urlInput.val();
+            var $status = $urlGroup.find('.smp-fetch-status');
+            $status.removeClass('is-error is-success');
+            if (!mediaUrl) {
+                $status.addClass('is-error').text(SMP_Admin.i18n.noMediaUrl);
+                return;
+            }
+            var $btn = $(this);
+            $btn.prop('disabled', true);
+            $status.text(SMP_Admin.i18n.copying);
+
+            $.post(SMP_Admin.ajaxUrl, {
+                action: 'smp_copy_to_library',
+                nonce: SMP_Admin.copyNonce,
+                url: mediaUrl,
+                post_id: $('#post_ID').val()
+            }).done(function (response) {
+                if (response && response.success && response.data && response.data.attachment_id) {
+                    $attachmentInput.val(response.data.attachment_id);
+                    $clearBtn.removeAttr('hidden');
+                    $sourceRadios.filter('[value="library"]').prop('checked', true).trigger('change');
+                    $status.addClass('is-success').text(SMP_Admin.i18n.copyOk);
+                } else {
+                    var msg = (response && response.data && response.data.message) ? response.data.message : SMP_Admin.i18n.copyFailed;
+                    $status.addClass('is-error').text(msg);
+                }
+            }).fail(function () {
+                $status.addClass('is-error').text(SMP_Admin.i18n.copyFailed);
+            }).always(function () {
+                $btn.prop('disabled', false);
+            });
+        });
+
         updateSourceVisibility();
     });
 })(jQuery);

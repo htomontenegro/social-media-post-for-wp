@@ -210,12 +210,22 @@ class Importer {
 		update_post_meta( $post_id, '_smp_author_bio', $parsed['author_bio'] );
 		update_post_meta( $post_id, '_smp_author_handle', $parsed['author_handle'] );
 
-		$media_type   = $fields['video_url'] ? 'video' : 'image';
-		$media_url    = $fields['video_url'] ?: $fields['image_url'];
+		$media_type    = $fields['video_url'] ? 'video' : 'image';
+		$media_url     = $fields['video_url'] ?: $fields['image_url'];
+		$attachment_id = 0;
+		$media_source  = 'url';
+
+		if ( $fields['image_url'] ) {
+			$attachment_id = $this->sideload_image( $fields['image_url'], $post_id );
+			if ( $attachment_id ) {
+				$media_source = 'attachment';
+			}
+		}
+
 		update_post_meta( $post_id, '_smp_media_type', $media_type );
-		update_post_meta( $post_id, '_smp_media_source', 'url' );
+		update_post_meta( $post_id, '_smp_media_source', $media_source );
 		update_post_meta( $post_id, '_smp_media_url', $media_url );
-		update_post_meta( $post_id, '_smp_media_attachment_id', 0 );
+		update_post_meta( $post_id, '_smp_media_attachment_id', $attachment_id );
 
 		if ( ! empty( $collections ) ) {
 			wp_set_post_terms( $post_id, $collections, 'social_media_collection', false );
@@ -236,6 +246,19 @@ class Importer {
 				? __( 'Created with caption and media.', 'social-media-posts' )
 				: __( 'Created — needs manual completion.', 'social-media-posts' ),
 		] );
+	}
+
+	private function sideload_image( string $url, int $post_id ): int {
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		$attachment_id = media_sideload_image( $url, $post_id, '', 'id' );
+		if ( is_wp_error( $attachment_id ) ) {
+			error_log( 'SMP: sideload_image failed for ' . $url . ': ' . $attachment_id->get_error_message() );
+			return 0;
+		}
+		return (int) $attachment_id;
 	}
 
 	private function find_existing_post( string $url ): int {

@@ -147,6 +147,7 @@ class MetaBox {
 					<button type="button" class="button smp-fetch-oembed"><?php esc_html_e( 'Fetch from URL', 'social-media-posts' ); ?></button>
 				</div>
 				<p class="description"><?php esc_html_e( 'Click "Fetch from URL" to try to auto-capture a thumbnail from the Post URL above (works for YouTube, Vimeo, and other oEmbed-friendly platforms). For Instagram, Facebook, or TikTok you may need to enter the image URL manually.', 'social-media-posts' ); ?></p>
+				<button type="button" class="button smp-copy-to-library"><?php esc_html_e( 'Copy to Media Library', 'social-media-posts' ); ?></button>
 				<div class="smp-fetch-status" role="status" aria-live="polite"></div>
 			</div>
 
@@ -252,9 +253,10 @@ class MetaBox {
 		);
 
 		wp_localize_script( 'smp-admin', 'SMP_Admin', [
-			'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-			'nonce'     => wp_create_nonce( 'smp_fetch_oembed' ),
-			'i18n'      => [
+			'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
+			'nonce'      => wp_create_nonce( 'smp_fetch_oembed' ),
+			'copyNonce'  => wp_create_nonce( 'smp_copy_to_library' ),
+			'i18n'       => [
 				'pickImage'   => __( 'Select an image', 'social-media-posts' ),
 				'pickVideo'   => __( 'Select a video', 'social-media-posts' ),
 				'useThis'     => __( 'Use this media', 'social-media-posts' ),
@@ -262,6 +264,10 @@ class MetaBox {
 				'fetchFailed' => __( 'Could not fetch a thumbnail from this URL. Enter the media URL manually.', 'social-media-posts' ),
 				'fetchOk'     => __( 'Thumbnail captured.', 'social-media-posts' ),
 				'enterUrl'    => __( 'Enter the Post URL first.', 'social-media-posts' ),
+				'copying'     => __( 'Copying…', 'social-media-posts' ),
+				'copyOk'      => __( 'Copied to Media Library.', 'social-media-posts' ),
+				'copyFailed'  => __( 'Could not copy the image — check the URL and try again.', 'social-media-posts' ),
+				'noMediaUrl'  => __( 'Enter a media URL first.', 'social-media-posts' ),
 			],
 		] );
 	}
