@@ -25,11 +25,19 @@
 
 		var xPos    = 0;
 		var xTarget = 0;
-		var xAtDragStart = 0;
 		var snapTimer;
-		var lastX = 0;
-		var lastTime = 0;
 		var velocity = 0;
+		var velSamples = [];
+		var VEL_WINDOW = 100;   // ms window over which release velocity is measured
+		var isDragging = false;
+		var didDrag = false;
+
+		// Momentum tuning. Velocity is tracked in px/ms; the ticker turns it
+		// into distance per frame via MOMENTUM_STEP and decays it by FRICTION.
+		var FRICTION = 0.94;       // per-frame velocity decay during momentum
+		var MIN_VELOCITY = 0.05;   // below this, momentum stops and snaps
+		var MOMENTUM_STEP = 16;    // ms/frame used to turn velocity into distance
+		var MAX_THROW_CARDS = 3;   // cap a single fling to this many cards
 
 		// ── helpers ──────────────────────────────────────────────────────
 
@@ -181,14 +189,69 @@
 			} );
 		}
 
-		// ── ticker for lerp movement ──────────────────────────────────────
+		// ── momentum helpers ──────────────────────────────────────────────
+
+		// Stop dead wherever we are. Used on press/touchstart so a tap halts a
+		// running fling instead of letting it coast under the finger.
+		function freeze() {
+			velocity = 0;
+			velSamples.length = 0;
+			clearTimeout( snapTimer );
+			xTarget = xPos;
+		}
+
+		// Sample the drag position over a short window so release velocity
+		// reflects the real fling speed, not one noisy sample. performance.now()
+		// has sub-ms resolution, avoiding the spikes that Date.now()'s 1ms
+		// resolution produced on slow drags (tiny dt → huge dx/dt).
+		function trackVelocity( pos ) {
+			var now = performance.now();
+			velSamples.push( { x: pos, t: now } );
+			while ( velSamples.length > 2 && now - velSamples[ 0 ].t > VEL_WINDOW ) {
+				velSamples.shift();
+			}
+			var first = velSamples[ 0 ];
+			var span  = now - first.t;
+			velocity  = span > 0 ? ( pos - first.x ) / span : 0;
+		}
+
+		// Hand a drag off to the ticker's momentum phase. Cap the fling so a hard
+		// swipe can't overshoot more than a few cards, then let friction + snap
+		// take over. Tiny flicks just snap immediately.
+		function releaseDrag() {
+			isDragging = false;
+			// If the finger was held still just before lifting, don't fling.
+			var last = velSamples[ velSamples.length - 1 ];
+			if ( ! last || performance.now() - last.t > 60 ) {
+				velocity = 0;
+			}
+			var maxV = ( MAX_THROW_CARDS * cardStep() * ( 1 - FRICTION ) ) / MOMENTUM_STEP;
+			velocity = gsap.utils.clamp( -maxV, maxV, velocity );
+			if ( Math.abs( velocity ) < MIN_VELOCITY ) {
+				velocity = 0;
+				snapToNearest();
+			}
+		}
+
+		// ── ticker: single source of truth for movement ───────────────────
 
 		gsap.ticker.add( function () {
+			// Momentum is integrated here, into the same xTarget that
+			// normalizeLoop() adjusts, so the two can never desync.
+			if ( ! isDragging && Math.abs( velocity ) > MIN_VELOCITY ) {
+				xTarget = clamp( xTarget + velocity * MOMENTUM_STEP );
+				velocity *= FRICTION;
+				if ( Math.abs( velocity ) <= MIN_VELOCITY ) {
+					velocity = 0;
+					snapToNearest();
+				}
+			}
+
 			var diff = xTarget - xPos;
 			if ( Math.abs( diff ) < 0.05 ) {
 				return;
 			}
-			xPos += diff * 0.18;
+			xPos += isDragging ? diff : diff * 0.32;
 			normalizeLoop();
 			gsap.set( track, { x: xPos } );
 			updateCards();
@@ -207,91 +270,70 @@
 			xTarget = clamp( xTarget - ( primaryDelta * 0.85 ) );
 			velocity = 0;
 			clearTimeout( snapTimer );
-			snapTimer = setTimeout( snapToNearest, 220 );
+			snapTimer = setTimeout( snapToNearest, 600 );
 		}, { passive: false } );
 
 		if ( typeof Observer !== 'undefined' ) {
 			Observer.create( {
 				target: wrap,
 				type: 'pointer',
-				dragMinimum: 6,
+				dragMinimum: 3,
+				onPress: function () {
+					didDrag = false;
+					freeze();
+				},
 				onDragStart: function () {
-					xAtDragStart = xTarget;
-					lastX = 0;
-					lastTime = Date.now();
+					didDrag = true;
+					isDragging = true;
 					velocity = 0;
 					wrap.classList.add( 'is-dragging' );
 				},
 				onDrag: function ( self ) {
-					var now = Date.now();
-					var dt = Math.max( 1, now - lastTime );
-					var dx = self.x - self.startX - lastX;
-
-					velocity = dx / dt;
-					lastX = self.x - self.startX;
-					lastTime = now;
-
-					xTarget = clamp( xAtDragStart + self.x - self.startX );
+					trackVelocity( self.x );
+					// Apply the incremental finger delta, not an absolute offset
+					// from a fixed origin. normalizeLoop() shifts xTarget by ±step
+					// when a card wraps mid-drag; an absolute mapping would clobber
+					// that each move and make the carousel race.
+					xTarget = clamp( xTarget + self.deltaX );
 				},
 				onDragEnd: function () {
 					wrap.classList.remove( 'is-dragging' );
-					applyMomentum();
+					releaseDrag();
+				},
+				onRelease: function () {
+					// A tap (press + release with no drag) settles to the
+					// nearest card instead of leaving it mid-scroll.
+					if ( ! didDrag ) {
+						snapToNearest();
+					}
 				},
 				preventDefault: true,
 			} );
 		} else {
-			var touchStartX = 0;
-			var touchStartTarget = 0;
-			var touchLastX = 0;
-			var touchLastTime = 0;
+			var lastTouchX = 0;
 
 			wrap.addEventListener( 'touchstart', function ( e ) {
-				touchStartX = e.touches[ 0 ].clientX;
-				touchStartTarget = xTarget;
-				touchLastX = touchStartX;
-				touchLastTime = Date.now();
-				velocity = 0;
+				didDrag = false;
+				freeze();
+				lastTouchX = e.touches[ 0 ].clientX;
 			}, { passive: true } );
 
 			wrap.addEventListener( 'touchmove', function ( e ) {
-				var now = Date.now();
-				var dt = Math.max( 1, now - touchLastTime );
+				didDrag = true;
+				isDragging = true;
 				var currentX = e.touches[ 0 ].clientX;
-				var dx = currentX - touchLastX;
-
-				velocity = dx / dt;
-				touchLastX = currentX;
-				touchLastTime = now;
-
-				var delta = currentX - touchStartX;
-				xTarget = clamp( touchStartTarget + delta );
+				trackVelocity( currentX );
+				// Incremental delta so normalizeLoop()'s xTarget shifts survive.
+				xTarget = clamp( xTarget + ( currentX - lastTouchX ) );
+				lastTouchX = currentX;
 			}, { passive: true } );
 
-			wrap.addEventListener( 'touchend', applyMomentum );
-		}
-
-		// ── momentum scrolling ────────────────────────────────────────────
-
-		function applyMomentum() {
-			var speed = Math.abs( velocity );
-			if ( speed < 0.1 ) {
-				snapToNearest();
-				return;
-			}
-
-			var decelerationTime = Math.min( 800, speed * 1000 );
-			var decelerationDistance = velocity * decelerationTime * 0.5;
-			var targetX = clamp( xTarget + decelerationDistance );
-
-			clearTimeout( snapTimer );
-			gsap.to( { x: xTarget }, {
-				x: targetX,
-				duration: decelerationTime / 1000,
-				ease: 'power2.out',
-				onUpdate: function ( tween ) {
-					xTarget = tween.targets()[ 0 ].x;
-				},
-				onComplete: snapToNearest,
+			wrap.addEventListener( 'touchend', function () {
+				if ( ! didDrag ) {
+					snapToNearest();
+					return;
+				}
+				releaseDrag();
 			} );
 		}
 
@@ -302,17 +344,19 @@
 
 		if ( prevBtn ) {
 			prevBtn.addEventListener( 'click', function () {
+				velocity = 0;
 				xTarget = clamp( xTarget + cardStep() );
 				clearTimeout( snapTimer );
-				snapTimer = setTimeout( snapToNearest, 350 );
+				snapTimer = setTimeout( snapToNearest, 500 );
 			} );
 		}
 
 		if ( nextBtn ) {
 			nextBtn.addEventListener( 'click', function () {
+				velocity = 0;
 				xTarget = clamp( xTarget - cardStep() );
 				clearTimeout( snapTimer );
-				snapTimer = setTimeout( snapToNearest, 350 );
+				snapTimer = setTimeout( snapToNearest, 500 );
 			} );
 		}
 
